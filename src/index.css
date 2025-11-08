@@ -2,6 +2,9 @@
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+@theme {
+  --font-funnel: "Funnel Display", sans-serif;
+}
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
@@ -42,6 +45,8 @@
 }
 
 :root {
+  --font-funnel: "Funnel Display", "sans-serif";
+
   --color-background: #dde6ed;
   --color-foreground: #27374d;
   --color-primary: #526d82;
