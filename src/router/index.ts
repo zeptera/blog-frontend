@@ -14,24 +14,23 @@ const router = createBrowserRouter([
         index: true,
         Component: Home,
       },
-    ],
-  },
-  {
-    path: "auth",
-    Component: AuthLayout,
-
-    children: [
       {
-        index: true,
-        loader: () => redirect("/auth/login"),
-      },
-      {
-        path: "login",
-        Component: Login,
-      },
-      {
-        path: "signup",
-        Component: Signup,
+        path: "auth",
+        Component: AuthLayout,
+        children: [
+          {
+            index: true,
+            loader: () => redirect("/auth/login"),
+          },
+          {
+            path: "login",
+            Component: Login,
+          },
+          {
+            path: "signup",
+            Component: Signup,
+          },
+        ],
       },
     ],
   },

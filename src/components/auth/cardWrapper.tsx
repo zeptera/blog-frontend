@@ -16,8 +16,8 @@ interface ICardWrapper {
   cardTitle: string;
   cardDescription: string;
   children: ReactNode;
-  backText: string;
-  backLink: string;
+  backText?: string;
+  backLink?: string;
   footerContent?: ReactNode;
 }
 export function CardWrapper({
@@ -36,11 +36,15 @@ export function CardWrapper({
           {cardTitle}
         </CardTitle>
         <CardDescription>{cardDescription}</CardDescription>
-        <CardAction>
-          <Button variant="link">
-            <Link to={backLink}>{backText}</Link>
-          </Button>
-        </CardAction>
+        {backLink && backText ? (
+          <CardAction>
+            <Button variant="link">
+              <Link to={backLink}>{backText}</Link>
+            </Button>
+          </CardAction>
+        ) : (
+          ""
+        )}
       </CardHeader>
       <CardContent>{children}</CardContent>
       {footerContent && (

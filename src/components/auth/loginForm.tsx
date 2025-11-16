@@ -2,96 +2,95 @@ import { Label } from "@radix-ui/react-label";
 import CardWrapper from "./cardWrapper";
 import { Input } from "../ui/input";
 import { Link, useNavigate } from "react-router";
-import { Button } from "../ui/button";
-import { FcGoogle } from "react-icons/fc";
-import { FaGithub } from "react-icons/fa";
-import { useRef, type FormEvent } from "react";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth, githubAuthProvider, googleProvider } from "@/config/firebase";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { loginFormSchema, type loginFormType } from "@/schemas/loginForm";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FirebaseError } from "firebase/app";
+import LoginFooterContent from "./loginFooterContent";
+import Alert from "../ui/alert";
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  const formRef = useRef<HTMLFormElement>(null);
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    if (!formRef.current) return;
+  const {
+    register,
+    handleSubmit,
+    setError,
+    clearErrors,
+    formState: { errors, isSubmitting },
+  } = useForm<loginFormType>({ resolver: zodResolver(loginFormSchema) });
 
-    const formData = new FormData(formRef.current);
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-
-    signInWithEmailAndPassword(auth, email, password)
-      .then(() => navigate("/"))
-      .catch((error) => console.error(error));
+  const onSubmit: SubmitHandler<loginFormType> = async (
+    data: loginFormType,
+  ) => {
+    try {
+      await signInWithEmailAndPassword(auth, data.email, data.password);
+      navigate("/");
+    } catch (error) {
+      if (error instanceof FirebaseError) {
+        switch (error.code) {
+          case "auth/invalid-credential":
+            setError("root", { message: "Invalid credentials" });
+            break;
+        }
+      }
+    }
   };
+
   const signInWithGoogle = async () => {
     signInWithPopup(auth, googleProvider)
-      .then(() => navigate("/"))
+      .then(() => console.log(auth))
       .catch((error) => console.error(error));
   };
   const signInWithGithub = async () => {
     signInWithPopup(auth, githubAuthProvider)
-      .then(() => navigate("/"))
+      .then(() => console.log(auth))
       .catch((error) => console.error(error));
   };
-  const footerContent = (
-    <>
-      <Button
-        form="signin-form"
-        type="submit"
-        onSubmit={handleSubmit}
-        className="w-full"
-      >
-        Login
-      </Button>
-      <div className="w-full flex items-center justify-between flex-row">
-        <div className="bg-gray-300 h-[1px] w-1/4"></div>
-        <p>Or continue with</p>
-        <div className="bg-gray-300 h-[1px] w-1/4"></div>
-      </div>
-
-      <div className="gap-2 flex justify-between w-full">
-        <Button
-          variant="outline"
-          className="flex items-center justify-center flex-1 gap-2"
-          onClick={signInWithGoogle}
-        >
-          <FcGoogle className="w-4 h-4" />
-          Google
-        </Button>
-        <Button
-          variant="outline"
-          className="flex items-center justify-center flex-1"
-          onClick={signInWithGithub}
-        >
-          <FaGithub className="w-4 h-4" />
-          Github
-        </Button>
-      </div>
-    </>
-  );
   return (
     <CardWrapper
       cardTitle="Login to your account"
       cardDescription="Enter your email below to login to your account"
       backText="Signup"
       backLink="/auth/signup"
-      footerContent={footerContent}
+      footerContent={
+        <LoginFooterContent
+          onGithubSignIn={signInWithGithub}
+          onGoogleSignIn={signInWithGoogle}
+          isSubmitting={isSubmitting}
+        />
+      }
     >
-      <form id="signin-form" ref={formRef}>
+      <form id="signin-form" onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-6">
           <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
+            <Label
+              htmlFor="email"
+              className={errors.email && "text-destructive"}
+            >
+              Email
+            </Label>
             <Input
+              {...register("email")}
               id="email"
-              type="email"
               placeholder="johndoe@example.com"
-              required
+              className={`${errors.email && " text-red-600 border border-red-600 "}`}
             />
+            {errors.email && (
+              <span className="text-xs text-red-600">
+                {errors.email?.message}
+              </span>
+            )}
           </div>
           <div className="grid gap-2">
             <div className="flex items-center">
-              <Label htmlFor="password">Password</Label>
+              <Label
+                htmlFor="password"
+                className={errors.password && "text-destructive"}
+              >
+                Password
+              </Label>
               <Link
                 to="#"
                 className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
@@ -100,13 +99,25 @@ const LoginForm = () => {
               </Link>
             </div>
             <Input
+              {...register("password")}
               id="password"
               placeholder="********"
               type="password"
-              required
+              className={`${errors.password && " text-red-600 border-1 border-red-600 "}`}
             />
+            {errors.password && (
+              <span className="text-red-600 text-xs">
+                {errors.password?.message}
+              </span>
+            )}
           </div>
         </div>
+        {errors.root && (
+          <Alert
+            message={errors.root.message}
+            clearMessage={() => clearErrors("root")}
+          />
+        )}
       </form>
     </CardWrapper>
   );
