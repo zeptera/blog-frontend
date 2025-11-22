@@ -1,15 +1,15 @@
-import { Label } from "@/components/ui/label";
-import CardWrapper from "./cardWrapper";
-import { Input } from "../ui/input";
-import { auth, googleProvider, githubAuthProvider } from "@/config/firebase";
-import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router";
 import { FirebaseError } from "firebase/app";
-import SignupFooterContent from "./signupFooterContent";
 import { useForm, type SubmitHandler } from "react-hook-form";
+import { auth, googleProvider, githubAuthProvider } from "@/config/firebase";
+import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { signupFormSchema, type signupFormType } from "@/schemas/signupForm";
-import { zodResolver } from "@hookform/resolvers/zod";
-import Alert from "../ui/alert";
+import Alert from "@/components/ui/alert";
+import { Label } from "@/components/ui/label";
+import CardWrapper from "@/components/ui/cardWrapper";
+import { Input } from "@/components/ui/input";
+import SignupFormFooter from "./signupFormFooter.tsx";
 
 const SignupForm = () => {
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ const SignupForm = () => {
   ) => {
     try {
       await createUserWithEmailAndPassword(auth, data.email, data.password);
-      navigate("/");
+      navigate("/onboarding");
     } catch (error) {
       if (error instanceof FirebaseError) {
         switch (error.code) {
@@ -59,7 +59,7 @@ const SignupForm = () => {
       backText="Login"
       backLink="/auth/login"
       footerContent={
-        <SignupFooterContent
+        <SignupFormFooter
           onGithubSignIn={signInWithGithub}
           onGoogleSignIn={signInWithGoogle}
           isSubmitting={isSubmitting}

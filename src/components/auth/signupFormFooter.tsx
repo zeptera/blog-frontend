@@ -2,17 +2,17 @@ import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { Button } from "../ui/button";
 
-interface ISignupFooterProps {
+interface ISignupFormFooter {
   onGoogleSignIn: () => void;
   onGithubSignIn: () => void;
   isSubmitting: boolean;
 }
 
-const SignupFooterContent = ({
+const SignupFormFooter = ({
   onGithubSignIn,
   onGoogleSignIn,
   isSubmitting,
-}: ISignupFooterProps) => {
+}: ISignupFormFooter) => {
   return (
     <>
       <Button
@@ -51,4 +51,4 @@ const SignupFooterContent = ({
   );
 };
 
-export default SignupFooterContent;
+export default SignupFormFooter ;

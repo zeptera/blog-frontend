@@ -1,17 +1,17 @@
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 
-interface ILoginFooterProps {
+interface ILoginFormFooterProps {
   onGoogleSignIn: () => void;
   onGithubSignIn: () => void;
   isSubmitting: boolean;
 }
-const LoginFooterContent = ({
+const LoginFormFooter = ({
   onGithubSignIn,
   onGoogleSignIn,
   isSubmitting,
-}: ILoginFooterProps) => {
+}: ILoginFormFooterProps) => {
   return (
     <>
       <Button
@@ -50,4 +50,4 @@ const LoginFooterContent = ({
   );
 };
 
-export default LoginFooterContent;
+export default LoginFormFooter;

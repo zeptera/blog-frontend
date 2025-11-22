@@ -1,15 +1,15 @@
-import { Label } from "@radix-ui/react-label";
-import CardWrapper from "./cardWrapper";
-import { Input } from "../ui/input";
-import { Link, useNavigate } from "react-router";
-import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-import { auth, githubAuthProvider, googleProvider } from "@/config/firebase";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { loginFormSchema, type loginFormType } from "@/schemas/loginForm";
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { Link, useNavigate } from "react-router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FirebaseError } from "firebase/app";
-import LoginFooterContent from "./loginFooterContent";
-import Alert from "../ui/alert";
+import { auth, githubAuthProvider, googleProvider } from "@/config/firebase";
+import { loginFormSchema, type loginFormType } from "@/schemas/loginForm";
+import LoginFormFooter from "./loginFormFooter.tsx";
+import Alert from "@/components/ui/alert";
+import { Label } from "@/components/ui/label";
+import CardWrapper from "@/components/ui/cardWrapper";
+import { Input } from "@/components/ui/input";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -55,7 +55,7 @@ const LoginForm = () => {
       backText="Signup"
       backLink="/auth/signup"
       footerContent={
-        <LoginFooterContent
+        <LoginFormFooter
           onGithubSignIn={signInWithGithub}
           onGoogleSignIn={signInWithGoogle}
           isSubmitting={isSubmitting}
