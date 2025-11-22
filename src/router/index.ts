@@ -4,6 +4,7 @@ import AuthLayout from "../pages/auth/layout.tsx";
 import Home from "../pages/home";
 import Login from "../pages/auth/login.tsx";
 import Signup from "../pages/auth/signup.tsx";
+import Onboarding from "@/pages/onboarding";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
             Component: Signup,
           },
         ],
+      },
+      {
+        path: "onboarding",
+        Component: Onboarding,
       },
     ],
   },

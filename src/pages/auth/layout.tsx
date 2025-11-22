@@ -1,5 +1,5 @@
 import { Link, Navigate, Outlet } from "react-router";
-import zeptera from "../../assets/zeptera.svg";
+import zeptera from "@/assets/zeptera.svg";
 import { useAuth } from "@/hooks/useAuth";
 
 const AuthLayout = () => {
